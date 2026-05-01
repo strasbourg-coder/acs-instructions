@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Complet: Développement d'Armes Roblox Lua</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            margin-top: 120px;
+            gap: 0;
+        }
+
+        nav {
+            background: white;
+            padding: 2rem;
+            position: fixed;
+            left: 0;
+            top: 120px;
+            width: 250px;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        nav button {
+            display: block;
+            width: 100%;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        nav button:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        nav button.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        main {
+            margin-left: 250px;
+            padding: 3rem;
+            background: white;
+            min-height: calc(100vh - 120px);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: #764ba2;
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h4 {
+            color: #667eea;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            border-left: 4px solid #667eea;
+            line-height: 1.5;
+        }
+
+        .code-block code {
+            display: block;
+            white-space: pre;
+        }
+
+        .note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        .note strong {
+            color: #2196f3;
+        }
+
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        .warning strong {
+            color: #ff9800;
+        }
+
+        .success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        .success strong {
+            color: #4caf50;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+            font-size: 1.05rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        table thead {
+            background: #667eea;
+            color: white;
+        }
+
+        table th, table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .highlight {
+            background: #fff59d;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        footer {
+            background: #667eea;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                position: relative;
+                width: 100%;
+                height: auto;
+                top: 0;
+                margin-top: 120px;
+            }
+
+            main {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .concept-box {
+            background: #f0f4ff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 2px dashed #667eea;
+        }
+
+        .concept-box h4 {
+            margin-top: 0;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎮 Guide Complet du Développement d'Armes Roblox</h1>
+        <p>Un guide exhaustif pour créer des systèmes d'armes professionnels en Lua</p>
+    </header>
+
+    <div class="container">
+        <nav id="menu">
+            <button class="nav-button active" onclick="showSection('accueil')">📖 Accueil</button>
+            <button class="nav-button" onclick="showSection('fondamentaux')">🔤 Fondamentaux Lua</button>
+            <button class="nav-button" onclick="showSection('roblox-basics')">🏗️ Bases Roblox</button>
+            <button class="nav-button" onclick="showSection('structure-arme')">🔫 Structure d'une Arme</button>
+            <button class="nav-button" onclick="showSection('hitdetection')">💥 Hit Detection</button>
+            <button class="nav-button" onclick="showSection('dommages')">⚔️ Système de Dommages</button>
+            <button class="nav-button" onclick="showSection('projectiles')">🔶 Projectiles & Rayons</button>
+            <button class="nav-button" onclick="showSection('animations')">🎬 Animations & Effets</button>
+            <button class="nav-button" onclick="showSection('sons')">🔊 Sons & Audio</button>
+            <button class="nav-button" onclick="showSection('cooldown')">⏱️ Cooldown & Timing</button>
+            <button class="nav-button" onclick="showSection('munitions')">📦 Système de Munitions</button>
+            <button class="nav-button" onclick="showSection('physique')">🌍 Physique & Trajectoire</button>
+            <button class="nav-button" onclick="showSection('multiplayer')">👥 Système Multiplayer</button>
+            <button class="nav-button" onclick="showSection('optimisation')">⚡ Optimisation</button>
+            <button class="nav-button" onclick="showSection('exemple-complet')">💡 Exemple Complet: Fusil</button>
+            <button class="nav-button" onclick="showSection('exemple-epee')">⚔️ Exemple: Épée</button>
+            <button class="nav-button" onclick="showSection('debug')">🐛 Déboggage & Tests</button>
+            <button class="nav-button" onclick="showSection('astuces')">💎 Astuces Avancées</button>
+        </nav>
+
+        <main id="content">
+            <!-- SECTION ACCUEIL -->
+            <div id="accueil" class="section active">
+                <h2>Bienvenue dans le Guide Complet du Développement d'Armes Roblox</h2>
+                
+                <p>Ce guide vous enseignera <span class="highlight">TOUT</span> ce que vous devez savoir pour créer des systèmes d'armes professionnels dans Roblox. De l'épée simple au fusil complexe avec projectiles, détection de collision, et effets visuels.</p>
+
+                <h3>Ce que vous apprendrez:</h3>
+                <ul>
+                    <li><strong>Les fondamentaux de Lua:</strong> variables, fonctions, tables, boucles, conditions</li>
+                    <li><strong>L'architecture Roblox:</strong> Workspace, Instance, Events, Connections</li>
+                    <li><strong>La création d'armes:</strong> structure, mécanique, interactions</li>
+                    <li><strong>Les systèmes de combat:</strong> hit detection, dommages, knockback</li>
+                    <li><strong>Les projectiles:</strong> création, trajectoire, physique</li>
+                    <li><strong>Les animations:</strong> création et synchronisation</li>
+                    <li><strong>Les effets visuels:</strong> particules, lumières, impacts</li>
+                    <li><strong>Le multijoueur:</strong> synchronisation avec RemoteEvents</li>
+                    <li><strong>L'optimisation:</strong> performance et ressources</li>
+                </ul>
+
+                <h3>Prérequis:</h3>
+                <ul>
+                    <li>Une compréhension basique de la programmation (pas nécessairement Lua)</li>
+                    <li>L'accès à Roblox Studio</li>
+                    <li>Un peu de patience et de curiosité 🎯</li>
+                </ul>
+
+                <div class="concept-box">
+                    <h4>ℹ️ Comment utiliser ce guide?</h4>
+                    <p>Chaque section contient du texte explicatif, des exemples de code, et des concepts clés. Je vous recommande de lire les sections dans l'ordre, mais vous pouvez aussi sauter directement à ce qui vous intéresse. Les exemples de code sont écrits pour être compris et modifiables!</p>
+                </div>
+
+                <h3>Structure de chaque section:</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Élément</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>🔤 Texte explicatif</strong></td>
+                            <td>Explique les concepts de manière claire et progressive</td>
+                        </tr>
+                        <tr>
+                            <td><strong>💻 Blocs de code</strong></td>
+                            <td>Exemples pratiques que vous pouvez copier/adapter</td>
+                        </tr>
+                        <tr>
+                            <td><strong>📌 Notes bleues</strong></td>
+                            <td>Informations supplémentaires et conseils</td>
+                        </tr>
+                        <tr>
+                            <td><strong>⚠️ Avertissements</strong></td>
+                            <td>Erreurs courantes à éviter</td>
+                        </tr>
+                        <tr>
+                            <td><strong>✅ Succès</strong></td>
+                            <td>Points d'accomplissement importants</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="note">
+                    <strong>💡 Conseil:</strong> Ouvrez Roblox Studio dans une autre fenêtre et codez en même temps que vous lisez. La pratique est la meilleure façon d'apprendre!
+                </div>
+            </div>
+
+            <!-- SECTION FONDAMENTAUX LUA -->
+            <div id="fondamentaux" class="section">
+                <h2>🔤 Fondamentaux de Lua</h2>
+
+                <p>Avant de créer des armes, vous devez comprendre les bases de Lua. C'est le langage utilisé par Roblox. Ne vous inquiétez pas si vous êtes nouveau, Lua est simple!</p>
+
+                <h3>1. Variables et Types de Données</h3>
+
+                <p>Une variable est un conteneur qui stocke une information. Lua a plusieurs types de données:</p>
+
+                <div class="code-block"><code>-- Nombres (integers et floats)
+local health = 100
+local damage = 25.5
+
+-- Chaînes de caractères (texte)
+local weaponName = "Fusil AK47"
+local message = "Vous avez tiré sur un ennemi!"
+
+-- Booléens (vrai ou faux)
+local isAlive = true
+local hasAmmo = false
+
+-- Nil (absence de valeur)
+local vide = nil
+
+-- Afficher une valeur dans la console
+print("Santé:", health)
+print(weaponName)</code></div>
+
+                <div class="note">
+                    <strong>🔑 Mot-clé local:</strong> Toujours utiliser <code>local</code> devant une variable. Cela la rend "locale" au contexte courant, ce qui est plus efficace et évite les conflits.
+                </div>
+
+                <h3>2. Opérateurs Mathématiques</h3>
+
+                <div class="code-block"><code>local a = 10
+local b = 3
+
+print(a + b)      -- 13 (addition)
+print(a - b)      -- 7 (soustraction)
+print(a * b)      -- 30 (multiplication)
+print(a / b)      -- 3.3333 (division)
+print(a % b)      -- 1 (modulo - reste de la division)
+print(a ^ b)      -- 1000 (exponentiation - a puissance b)
+
+-- Modifications rapides
+local ammo = 30
+ammo = ammo + 5   -- ammo devient 35
+ammo += 5         -- ERREUR! Lua n'a pas cette syntaxe
+ammo = ammo - 1   -- Bon</code></div>
+
+                <h3>3. Chaînes de Caractères</h3>
+
+                <div class="code-block"><code>local name = "Joueur"
+local level = 5
+local message = "Bienvenue " .. name .. "! Niveau: " .. level
+
+print(message)  -- Bienvenue Joueur! Niveau: 5
+
+-- Obtenir la longueur
+print(#message)   -- Affiche le nombre de caractères
+
+-- Convertir en nombre ou texte
+local textNumber = "42"
+local number = tonumber(textNumber)    -- "42" devient 42
+local text = tostring(100)              -- 100 devient "100"</code></div>
+
+                <h3>4. Tables (Arrays/Dictionnaires)</h3>
+
+                <p>Les tables sont la structure de données la plus importante en Lua. Elles peuvent contenir plusieurs valeurs:</p>
+
+                <div class="code-block"><code>-- Table comme liste (array)
+local weapons = {"Fusil", "Épée", "Pistolet"}
+print(weapons[1])      -- "Fusil" (indices commencent à 1 en Lua!)
+print(weapons[2])      -- "Épée"
+print(#weapons)        -- 3 (longueur)
+
+-- Ajouter des éléments
+table.insert(weapons, "Grenade")
+print(weapons[4])      -- "Grenade"
+
+-- Supprimer des éléments
+table.remove(weapons, 1)  -- Supprime "Fusil"
+
+-- Table comme dictionnaire
+local player = {
+    name = "Jean",
+    health = 100,
+    level = 5
+}
+
+print(player.name)     -- "Jean"
+print(player["health"]) -- 100 (autre syntaxe)
+
+-- Ajouter des clés
+player.armor = 25
+player["mana"] = 50</code></div>
+
+                <h3>5. Conditions (if/else)</h3>
+
+                <div class="code-block"><code>local health = 50
+local maxHealth = 100
+
+if health < 25 then
+    print("Santé critique!")
+elseif health < 50 then
+    print("Santé faible")
+else
+    print("Santé normale")
+end
+
+-- Opérateurs de comparaison
+if health == maxHealth then          -- Égal
+    print("Santé pleine")
+end
+
+if health ~= maxHealth then          -- Différent
+    print("Santé incomplète")
+end
+
+if health > 50 and maxHealth > 100 then  -- ET
+    print("Deux conditions vraies")
+end
+
+if health < 25 or ammo == 0 then     -- OU
+    print("Une des deux conditions")
+end
+
+if not isAlive then                   -- NON
+    print("Mort")
+end</code></div>
+
+                <h3>6. Boucles</h3>
+
+                <div class="code-block"><code>-- Boucle FOR (nombre défini d'itérations)
+for i = 1, 5 do
+    print("Itération " .. i)
+end
+-- Affiche: Itération 1, 2, 3, 4, 5
+
+-- FOR avec incrément personnalisé
+for i = 0, 10, 2 do
+    print(i)  -- 0, 2, 4, 6, 8, 10
+end
+
+-- Boucle FOR sur une table
+local weapons = {"Fusil", "Épée", "Pistolet"}
+for index, weapon in ipairs(weapons) do
+    print(index .. ": " .. weapon)
+end
+
+-- FOR sur dictionnaire
+local player = {name = "Jean", level = 5, health = 100}
+for key, value in pairs(player) do
+    print(key .. " = " .. value)
+end
+
+-- Boucle WHILE (tant que condition est vraie)
+local ammo = 5
+while ammo > 0 do
+    print("Tir! Munitions: " .. ammo)
+    ammo = ammo - 1
+end
+
+-- Boucle REPEAT-UNTIL (du moins une fois)
+local counter = 0
+repeat
+    print("Compteur: " .. counter)
+    counter = counter + 1
+until counter >= 3</code></div>
+
+                <h3>7. Fonctions</h3>
+
+                <p>Les fonctions sont des blocs de code réutilisables:</p>
+
+                <div class="code-block"><code>-- Fonction simple
+function sayHello()
+    print("Bonjour!")
+end
+
+sayHello()  -- Appeler la fonction
+
+-- Fonction avec paramètres
+function takeDamage(healthValue, damageAmount)
+    local newHealth = healthValue - damageAmount
+    return newHealth
+end
+
+local playerHealth = 100
+playerHealth = takeDamage(playerHealth, 25)
+print(playerHealth)  -- 75
+
+-- Fonction avec valeur par défaut (simulée)
+function shoot(damage, force)
+    force = force or 50  -- Si force n'existe pas, utiliser 50
+    print("Tir! Dégâts: " .. damage .. " Force: " .. force)
+end
+
+shoot(25)         -- Force: 50 (défaut)
+shoot(25, 100)    -- Force: 100
+
+-- Fonction retournant plusieurs valeurs
+function getWeaponStats()
+    return 25, 30, 5  -- dégâts, portée, cooldown
+end
+
+local dmg, range, cd = getWeaponStats()
+print(dmg, range, cd)  -- 25 30 5
+
+-- Fonction anonyme (lambda)
+local add = function(a, b)
+    return a + b
+end
+
+print(add(5, 3))  -- 8</code></div>
+
+                <div class="concept-box">
+                    <h4>🎯 Concept Clé: Scope (Portée)</h4>
+                    <p>Les variables locales ne sont accessibles que dans leur bloc (fonction, condition, etc.). Les variables sans <code>local</code> deviennent globales (accessibles partout) - à éviter!</p>
+                </div>
+
+                <h3>8. Tables Imbriquées (Structures Complexes)</h3>
+
+                <div class="code-block"><code>-- Structure d'arme complète
+local rifle = {
+    name = "AK47",
+    stats = {
+        damage = 25,
+        fireRate = 0.1,
+        ammo = 30,
+        maxAmmo = 120
+    },
+    effects = {
+        muzzleFlash = true,
+        sound = "rbxasset://sounds/rifle.mp3",
+        recoil = 5
+    },
+    isReloading = false
+}
+
+-- Accès aux données imbriquées
+print(rifle.name)                  -- "AK47"
+print(rifle.stats.damage)          -- 25
+print(rifle.effects.sound)         -- "rbxasset://sounds/rifle.mp3"
+
+-- Modification
+rifle.stats.ammo = rifle.stats.ammo - 1  -- Tirer une balle
+
+-- Itération imbriquée
+for key, value in pairs(rifle.stats) do
+    if type(value) == "number" then
+        print(key .. ": " .. value)
+    end
+end</code></div>
+
+                <div class="success">
+                    <strong>✅ Checkpoint:</strong> Vous comprenez les bases de Lua! Vous pouvez maintenant:
+                    <ul>
+                        <li>Créer et modifier des variables</li>
+                        <li>Utiliser les tables pour stocker des données</li>
+                        <li>Écrire des conditions et des boucles</li>
+                        <li>Créer des fonctions réutilisables</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECTION ROBLOX BASICS -->
+            <div id="roblox-basics" class="section">
+                <h2>🏗️ Les Bases de Roblox</h2>
+
+                <p>Maintenant que vous maîtrisez Lua, découvrez comment Roblox utilise Lua et ses objets spécifiques.</p>
+
+                <h3>1. L'Architecture de Roblox</h3>
+
+                <p>Roblox utilise une hiérarchie d'objets appelée le <span class="highlight">Workspace</span>. Chaque objet a une classe et des propriétés:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Concept</th>
+                            <th>Description</th>
+                            <th>Exemple</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Instance</strong></td>
+                            <td>Un objet dans Roblox</td>
+                            <td>Part (cube), Model (groupe), Script</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Workspace</strong></td>
+                            <td>Le conteneur principal du jeu</td>
+                            <td>Contient toutes les parts visibles</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Parent</strong></td>
+                            <td>Le conteneur d'une instance</td>
+                            <td>Part.Parent = Workspace</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Propriétés</strong></td>
+                            <td>Caractéristiques d'une instance</td>
+                            <td>Position, Rotation, Color, Size</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>2. Accéder aux Objets</h3>
+
+                <div class="code-block"><code>-- Service principal de Roblox
+local Workspace = workspace  -- Ou workspace (minuscule)
+
+-- Obtenir un objet enfant
+local part = Workspace:FindChild("MonPart")  -- Recherche dans enfants directs
+local part2 = Workspace:FindFirstChild("MonPart")  -- Alternative
+local part3 = Workspace:WaitForChild("MonPart")  -- Attendre si n'existe pas encore
+
+-- Accès direct par hiérarchie
+local part4 = Workspace.Models.MyModel.Part  -- Syntaxe alternative
+
+-- Boucler sur tous les enfants
+for i, child in pairs(Workspace:GetChildren()) do
+    print(child.Name)  -- Affiche le nom de chaque enfant
+end
+
+-- Obtenir tous les enfants de type spécifique
+local allParts = Workspace:FindPartBounded(Region3)  -- Avancé</code></div>
+
+                <h3>3. Créer et Modifier des Objets</h3>
+
+                <div class="code-block"><code>-- Créer une nouvelle part
+local newPart = Instance.new("Part")
+newPart.Name = "MaSphereMortel"
+newPart.Shape = Enum.PartType.Ball  -- Sphère
+newPart.Size = Vector3.new(2, 2, 2)  -- Largeur, hauteur, profondeur
+newPart.Color = Color3.fromRGB(255, 0, 0)  -- Rouge vif
+newPart.TopSurface = Enum.SurfaceType.Smooth
+newPart.Position = Vector3.new(0, 10, 0)  -- X, Y, Z
+
+-- IMPORTANT: Ajouter au Workspace pour qu'elle soit visible
+newPart.Parent = workspace
+
+-- Créer un Model (groupe d'objets)
+local gun = Instance.new("Model")
+gun.Name = "Fusil"
+gun.Parent = workspace
+
+-- Créer une part enfant du model
+local barrel = Instance.new("Part")
+barrel.Name = "Canon"
+barrel.Parent = gun
+
+-- Cloner un objet
+local clonedPart = newPart:Clone()
+clonedPart.Parent = workspace
+clonedPart.Position = Vector3.new(5, 10, 0)
+
+-- Supprimer un objet
+newPart:Destroy()  -- Supprime et déconnecte</code></div>
+
+                <h3>4. Propriétés Importantes</h3>
+
+                <div class="code-block"><code>local part = Instance.new("Part")
+
+-- Position et orientation
+part.Position = Vector3.new(0, 5, 0)  -- (X, Y, Z)
+part.Rotation = Vector3.new(0, 45, 0)  -- Degrés
+
+-- Taille
+part.Size = Vector3.new(1, 2, 3)  -- (Largeur, Hauteur, Profondeur)
+
+-- Couleur
+part.Color = Color3.fromRGB(255, 128, 0)  -- RGB: 0-255 chacun
+part.Color = Color3.new(1, 0.5, 0)  -- RGB: 0-1 chacun
+part.Transparency = 0.5  -- 0 = opaque, 1 = invisible
+
+-- Matériau (apparence)
+part.Material = Enum.Material.Neon  -- Brillant
+part.Material = Enum.Material.Wood  -- Bois
+part.Material = Enum.Material.Metal  -- Métal
+
+-- Physique
+part.CanCollide = true  -- Collision avec autres objets
+part.Anchored = true  -- Immobile (ne tombe pas)
+part.Anchored = false  -- Affecté par la physique
+part.Density = 1  -- Poids relatif
+
+-- Scripting
+part.CanQuery = true  -- Peut être trouvé par raycast</code></div>
+
+                <h3>5. Events (Événements) et Connections</h3>
+
+                <p>Les événements vous permettent de réagir quand quelque chose se passe:</p>
+
+                <div class="code-block"><code>local part = workspace:WaitForChild("MaPart")
+
+-- Événement: quand deux parties se touchent
+local function onTouched(hit)
+    print("Touché par: " .. hit.Name)
+    print("Parent du toucher: " .. hit.Parent.Name)
+end
+
+local connection = part.Touched:Connect(onTouched)
+
+-- Événement: quand une partie arrête de toucher
+part.TouchEnded:Connect(function(hit)
+    print("Arrêt du contact avec: " .. hit.Name)
+end)
+
+-- Arrêter un événement
+connection:Disconnect()
+
+-- Événement: changement de propriété
+part:GetPropertyChangedSignal("Position"):Connect(function()
+    print("La position a changé!")
+    print("Nouvelle position: " .. tostring(part.Position))
+end)
+
+-- Événement: enfant ajouté
+workspace.ChildAdded:Connect(function(child)
+    print("Un nouvel enfant a été ajouté: " .. child.Name)
+end)
+
+-- Événement: enfant retiré
+workspace.ChildRemoved:Connect(function(child)
+    print("Un enfant a été retiré: " .. child.Name)
+end)</code></div>
+
+                <h3>6. Services de Roblox</h3>
+
+                <p>Roblox fournit des services prédéfinis pour faire presque tout:</p>
+
+                <div class="code-block"><code>-- Obtenir un service
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Debris = game:GetService("Debris")
+local TweenService = game:GetService("TweenService")
+
+-- Service Players: gérer les joueurs
+Players.PlayerAdded:Connect(function(player)
+    print("Joueur " .. player.Name .. " a rejoint!")
+end)
+
+-- Service UserInputService: l'entrée clavier/souris
+local UserInputService = game:GetService("UserInputService")
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if input.KeyCode == Enum.KeyCode.E then
+        print("E appuyé!")
+    end
+end)
+
+-- Service RunService: boucle de jeu
+RunService.Stepped:Connect(function(elapsed, deltaTime)
+    -- Exécuté chaque frame (~60 FPS)
+    -- deltaTime = temps écoulé depuis dernière frame
+end)
+
+-- Service Debris: supprimer objets après délai
+local object = Instance.new("Part")
+object.Parent = workspace
+game:GetService("Debris"):AddItem(object, 5)  -- Détruit après 5 secondes</code></div>
+
+                <h3>7. Humanoid et Dégâts</h3>
+
+                <p>La classe Humanoid gère la santé des personnages:</p>
+
+                <div class="code-block"><code>-- Obtenir le Humanoid d'un personnage
+local player = Players:GetPlayers()[1]  -- Premier joueur
+local character = player.Character
+local humanoid = character:FindFirstChild("Humanoid")
+
+-- Propriétés du Humanoid
+print("Santé: " .. humanoid.Health)
+print("Santé max: " .. humanoid.MaxHealth)
+
+-- Infliger des dégâts
+humanoid:TakeDamage(25)  -- Inflige 25 dégâts
+
+-- Tuer instantanément
+humanoid.Health = 0
+
+-- Événement: quand le personnage meurt
+humanoid.Died:Connect(function()
+    print("Le personnage est mort!")
+    -- Ne pas utiliser character:Destroy() ici, Roblox s'en charge
+end)
+
+-- Obtenir le joueur à partir d'un personnage
+local character = hit.Parent
+if character:FindFirstChild("Humanoid") then
+    local player = Players:GetPlayerFromCharacter(character)
+    print("C'est un joueur: " .. player.Name)
+end</code></div>
+
+                <div class="concept-box">
+                    <h4>🎯 Scripts vs LocalScripts</h4>
+                    <p><strong>Script:</strong> Exécuté côté serveur (logique du jeu, autorité)
+                    <br><strong>LocalScript:</strong> Exécuté côté client (souris, clavier, visuel)
+                    <br>Pour les armes: utilisez un Script dans ServerScriptService + LocalScript pour l'animation du joueur.</p>
+                </div>
+
+                <h3>8. Wait et Delai</h3>
+
+                <div class="code-block"><code>-- Attendre un certain temps
+wait(2)  -- Attendre 2 secondes
+print("2 secondes plus tard!")
+
+-- Boucle avec délai
+for i = 1, 5 do
+    print(i)
+    wait(1)  -- 1 seconde entre chaque
+end
+
+-- Attendre un frame
+local RunService = game:GetService("RunService")
+RunService.Heartbeat:Wait()  -- Attendre la prochaine frame
+
+-- Utiliser dans une boucle
+while true do
+    print("Chaque frame!")
+    RunService.Heartbeat:Wait()  -- Plus précis que wait()
+end</code></div>
+
+                <div class="success">
+                    <strong>✅ Checkpoint:</strong> Vous savez maintenant:
+                    <ul>
+                        <li>Naviguer la hiérarchie Roblox</li>
+                        <li>Créer et modifier des objets</li>
+                        <li>Utiliser les événements</li>
+                        <li>Accéder aux services importants</li>
+                        <li>Gérer le Humanoid et les dégâts</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECTION STRUCTURE ARME -->
+            <div id="structure-arme" class="section">
+                <h2>🔫 Structure d'une Arme</h2>
+
+                <p>Une arme dans Roblox est essentiellement un Model contenant plusieurs parts et scripts. Apprenons à construire une arme modulaire et réutilisable.</p>
+
+                <h3>1. Architecture Générale</h3>
+
+                <p>Voici comment organiser une arme:</p>
+
+                <div class="code-block"><code>-- Hiérarchie d'une arme fusil:
+--
+-- Fusil (Model)
+-- ├─ Handle (Part) - la poignée
+-- ├─ Barrel (Part) - le canon
+-- ├─ Magazine (Part) - le chargeur
+-- ├─ Scope (Part) - la lunette optionnelle
+-- ├─ MuzzleFlash (ParticleEmitter) - effets au tir
+-- ├─ GunScript (Script) - logique serveur
+-- └─ LocalGunScript (LocalScript) - animations client</code></div>
+
+                <h3>2. Script Maître de l'Arme</h3>
+
+                <p>C'est la base pour toute arme:</p>
+
+                <div class="code-block"><code>-- GunScript.lua (dans ServerScriptService ou weapon)
+local Workspace = workspace
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+-- Configuration de l'arme
+local weaponConfig = {
+    name = "Fusil AK47",
+    damage = 25,
+    fireRate = 0.1,  -- Secondes entre les tirs
+    range = 1000,
+    ammo = 30,
+    maxAmmo = 120,
+    reloadTime = 2,
+    accuracy = 0.95  -- 0-1, plus bas = moins précis
+}
+
+-- État de l'arme
+local weaponState = {
+    isEquipped = false,
+    isShooting = false,
+    isReloading = false,
+    canShoot = true,
+    currentAmmo = weaponConfig.ammo,
+    totalAmmo = weaponConfig.maxAmmo,
+    lastShotTime = 0
+}
+
+-- Récupérer le script et le modèle arme
+local scriptParent = script.Parent
+local gunModel = scriptParent or Instance.new("Model")
+
+-- Récupérer les parts de l'arme
+local barrel = gunModel:WaitForChild("Barrel")
+local handle = gunModel:WaitForChild("Handle")
+
+-- Fonction: Tirer
+local function shoot()
+    if not weaponState.canShoot then
+        print("Tir en cooldown...")
+        return
+    end
+    
+    if weaponState.currentAmmo <= 0 then
+        print("Pas de munitions!")
+        return
+    end
+    
+    if weaponState.isReloading then
+        print("Recharge en cours...")
+        return
+    end
+    
+    -- Marquer que on vient de tirer
+    weaponState.canShoot = false
+    weaponState.currentAmmo = weaponState.currentAmmo - 1
+    
+    print("TAM! Balles restantes: " .. weaponState.currentAmmo)
+    
+    -- Appeler la logique de dégâts
+    dealDamage()
+    
+    -- Attendre le cooldown
+    task.wait(weaponConfig.fireRate)
+    weaponState.canShoot = true
+end
+
+-- Fonction: Infligez des dégâts
+local function dealDamage()
+    -- Sera détaillée dans la section Hit Detection
+    print("Logique de dégâts!")
+end
+
+-- Fonction: Recharger
+local function reload()
+    if weaponState.isReloading then
+        return
+    end
+    
+    if weaponState.currentAmmo == weaponConfig.ammo then
+        print("Chargeur plein!")
+        return
+    end
+    
+    weaponState.isReloading = true
+    print("Recharge...")
+    
+    task.wait(weaponConfig.reloadTime)
+    
+    -- Calculer les balles à ajouter
+    local ammoNeeded = weaponConfig.ammo - weaponState.currentAmmo
+    local ammoToAdd = math.min(ammoNeeded, weaponState.totalAmmo)
+    
+    weaponState.currentAmmo = weaponState.currentAmmo + ammoToAdd
+    weaponState.totalAmmo = weaponState.totalAmmo - ammoToAdd
+    
+    print("Recharge terminée! Chargeur: " .. weaponState.currentAmmo 
+        .. "/" .. weaponConfig.ammo .. " | Réserve: " .. weaponState.totalAmmo)
+    
+    weaponState.isReloading = false
+end
+
+-- Fonction: Équiper/Déséquiper
+local function equip(player)
+    weaponState.isEquipped = true
+    print(player.Name .. " a équipé " .. weaponConfig.name)
+end
+
+local function unequip(player)
+    weaponState.isEquipped = false
+    print(player.Name .. " a déséquipé " .. weaponConfig.name)
+end
+
+-- Exporter les fonctions
+_G.GunFunctions = {
+    shoot = shoot,
+    reload = reload,
+    equip = equip,
+    unequip = unequip,
+    getState = function() return weaponState end,
+    getConfig = function() return weaponConfig end
+}</code></div>
+
+                <h3>3. LocalScript pour Animations Client</h3>
+
+                <div class="code-block"><code>-- LocalGunScript.lua (LocalScript dans le weapon ou StarterPlayer)
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- Accéder aux fonctions du serveur (via _G ou RemoteEvent)
+-- On utilisera RemoteEvents plus tard pour la synchronisation multiplayer
+
+-- Variable pour garder le dernier équipement
+local currentWeapon = nil
+
+-- Souris: bouton gauche = tir
+mouse.Button1Down:Connect(function()
+    if currentWeapon then
+        print("Clic gauche: Tir!")
+        -- Appeler la fonction de tir
+        _G.GunFunctions.shoot()
+    end
+end)
+
+-- Clavier: R = recharger
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    if input.KeyCode == Enum.KeyCode.R then
+        print("R: Recharge")
+        _G.GunFunctions.reload()
+    end
+end)
+
+-- Clavier: E = équiper/déséquiper
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    if input.KeyCode == Enum.KeyCode.E then
+        if currentWeapon then
+            currentWeapon = nil
+            print("Déséquipé")
+        else
+            currentWeapon = workspace:FindFirstChild("Fusil")
+            print("Équipé")
+        end
+    end
+end)</code></div>
+
+                <h3>4. Classe Réutilisable pour Armes</h3>
+
+                <p>Pour les vrais projets, créez une classe Weapon:</p>
+
+                <div class="code-block"><code>-- Weapon.lua - Classe modulable
+local Weapon = {}
+Weapon.__index = Weapon
+
+function Weapon.new(weaponModel, config)
+    local self = setmetatable({}, Weapon)
+    
+    self.model = weaponModel
+    self.config = config or {}
+    self.state = {
+        isEquipped = false,
+        canShoot = true,
+        isReloading = false,
+        currentAmmo = config.ammo or 30,
+        totalAmmo = config.maxAmmo or 120
+    }
+    
+    return self
+end
+
+function Weapon:shoot()
+    if not self.state.canShoot then return end
+    if self.state.currentAmmo <= 0 then return end
+    if self.state.isReloading then return end
+    
+    self.state.canShoot = false
+    self.state.currentAmmo = self.state.currentAmmo - 1
+    
+    print(self.config.name .. " tir! Munitions: " .. self.state.currentAmmo)
+    
+    task.wait(self.config.fireRate or 0.1)
+    self.state.canShoot = true
+end
+
+function Weapon:reload()
+    if self.state.isReloading then return end
+    if self.state.currentAmmo == self.config.ammo then return end
+    
+    self.state.isReloading = true
+    task.wait(self.config.reloadTime or 2)
+    
+    local needed = self.config.ammo - self.state.currentAmmo
+    local toAdd = math.min(needed, self.state.totalAmmo)
+    
+    self.state.currentAmmo = self.state.currentAmmo + toAdd
+    self.state.totalAmmo = self.state.totalAmmo - toAdd
+    
+    self.state.isReloading = false
+end
+
+function Weapon:equip()
+    self.state.isEquipped = true
+end
+
+function Weapon:unequip()
+    self.state.isEquipped = false
+end
+
+return Weapon
+
+-- UTILISATION:
+-- local Weapon = require(path_to_Weapon_module)
+-- local rifle = Weapon.new(rifleModel, {
+--     name = "AK47",
+--     damage = 25,
+--     fireRate = 0.1,
+--     ammo = 30,
+--     maxAmmo = 120,
+--     reloadTime = 2
+-- })</code></div>
+
+                <div class="note">
+                    <strong>💡 Architecture Conseillée:</strong> 
+                    <ul>
+                        <li>Script maître dans ServerScriptService</li>
+                        <li>Classe Weapon dans un ModuleScript</li>
+                        <li>LocalScript pour animations client</li>
+                        <li>RemoteEvents pour communiquer serveur/client</li>
+                    </ul>
+                </div>
+
+                <h3>5. Configuration Centralisée</h3>
+
+                <div class="code-block"><code>-- WeaponConfigs.lua (ModuleScript)
+local configs = {
+    AK47 = {
+        name = "AK47",
+        damage = 25,
+        fireRate = 0.1,
+        range = 1000,
+        ammo = 30,
+        maxAmmo = 120,
+        reloadTime = 2,
+        accuracy = 0.95
+    },
+    
+    Sniper = {
+        name = "Fusil de Précision",
+        damage = 75,
+        fireRate = 1.5,
+        range = 2000,
+        ammo = 5,
+        maxAmmo = 25,
+        reloadTime = 3,
+        accuracy = 0.99
+    },
+    
+    Shotgun = {
+        name = "Fusil à Pompe",
+        damage = 60,
+        fireRate = 0.8,
+        range = 100,
+        ammo = 8,
+        maxAmmo = 32,
+        reloadTime = 3,
+        accuracy = 0.6  -- Moins précis
+    }
+}
+
+return configs
+
+-- UTILISATION:
+-- local configs = require(game.ServerScriptService.WeaponConfigs)
+-- local rifleConfig = configs.AK47</code></div>
+
+                <div class="success">
+                    <strong>✅ Checkpoint:</strong> Vous avez maintenant:
+                    <ul>
+                        <li>Une structure d'arme bien organisée</li>
+                        <li>Des scripts modulaires et réutilisables</li>
+                        <li>Une séparation serveur/client</li>
+                        <li>Des configurations externalisées</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECTION HIT DETECTION -->
+            <div id="hitdetection" class="section">
+                <h2>💥 Hit Detection (Détection de Coups)</h2>
+
+                <p>La détection de coups est cruciale pour les systèmes de combat. Voici comment savoir si une arme a touché quelque chose.</p>
+
+                <h3>1. Méthode 1: Events Touched</h3>
+
+                <p>La plus simple, mais parfois imprécise:</p>
+
+                <div class="code-block"><code>-- Utiliser Touched pour une épée
+local sword = workspace:WaitForChild("Sword")
+local hitPlayers = {}  -- Pour ne pas frapper 2 fois la même personne
+
+sword.Touched:Connect(function(hit)
+    -- Éviter de se frapper soi-même
+    if hit.Parent == sword.Parent then
+        return
+    end
+    
+    -- Vérifier si c'est un humanoid (personnage)
+    local humanoid = hit.Parent:FindFirstChild("Humanoid")
+    if not humanoid then
+        return
+    end
+    
+    -- Éviter de frapper la même personne plusieurs fois rapidement
+    if hitPlayers[humanoid] then
+        return
+    end
+    
+    hitPlayers[humanoid] = true
+    
+    -- Infliger des dégâts
+    humanoid:TakeDamage(25)
+    print("Coup touché! " .. humanoid.Parent.Name .. " prend 25 dégâts")
+    
+    -- Réinitialiser après 0.5 secondes (pour le prochain coup)
+    task.wait(0.5)
+    hitPlayers[humanoid] = nil
+end)</code></div>
+
+                <h3>2. Méthode 2: Raycasting (Meilleure)</h3>
+
+                <p>Plus précis et utilisé pour les fusils:</p>
+
+                <div class="code-block"><code>-- Raycasting: envoyer un "rayon" depuis le canon du fusil
+
+local barrel = workspace:WaitForChild("Barrel")
+
+local function shoot(gunPos, gunDir)
+    -- Créer une requête raycast
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterType = Enum.RaycastFilterType.Whitelist  -- Ou Blacklist
+    raycastParams.FilterDescendantsInstances = {workspace}  -- Où chercher
+    
+    -- Ignorer l'arme elle-même
+    -- (optionnel: ajouter à la liste noire)
+    
+    -- Envoyer le rayon
+    -- (position de départ, direction, paramètres)
+    local rayResult = workspace:Raycast(
+        gunPos,           -- Origine (tip: canon)
+        gunDir * 1000,    -- Direction * distance max
+        raycastParams
+    )
+    
+    if rayResult then
+        local hit = rayResult.Instance
+        local hitPoint = rayResult.Position
+        
+        print("Touché: " .. hit.Name .. " en " .. tostring(hitPoint))
+        
+        -- Vérifier si c'est un humanoid
+        local humanoid = hit.Parent:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid:TakeDamage(25)
+        else
+            -- Créer un effet d'impact
+            print("Objet solide touché")
+        end
+    else
+        print("Rien n'a été touché")
+    end
+end
+
+-- Exemple d'utilisation
+shoot(barrel.Position, barrel.CFrame.LookVector)  -- LookVector = direction du canon</code></div>
+
+                <h3>3. Raycast Avancé avec Configuration</h3>
+
+                <div class="code-block"><code>-- RaycastHelper.lua (ModuleScript)
+local RaycastHelper = {}
+
+function RaycastHelper.shoot(barrel, damage, config)
+    config = config or {}
+    local range = config.range or 1000
+    local damage_value = damage or 25
+    
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    
+    -- Ignorer l'arme et le joueur
+    local ignoreList = {barrel, barrel.Parent}
+    if config.ignorePlayer then
+        table.insert(ignoreList, config.ignorePlayer.Character)
+    end
+    
+    raycastParams.FilterDescendantsInstances = ignoreList
+    
+    -- Tirer le rayon
+    local direction = barrel.CFrame.LookVector  -- Direction du canon
+    local rayResult = workspace:Raycast(
+        barrel.Position,
+        direction * range,
+        raycastParams
+    )
+    
+    if rayResult then
+        local hit = rayResult.Instance
+        local hitPos = rayResult.Position
+        
+        -- Vérifier si humanoid
+        local humanoid = hit.Parent:FindFirstChild("Humanoid")
+        
+        if humanoid then
+            -- Infliger dégâts au joueur
+            humanoid:TakeDamage(damage_value)
+            
+            -- Créer un knockback (impulsion)
+            if config.knockback and config.knockback > 0 then
+                local dir = (hit.Parent.HumanoidRootPart.Position - barrel.Position).Unit
+                if hit.Parent:FindFirstChild("HumanoidRootPart") then
+                    hit.Parent.HumanoidRootPart.Velocity = dir * config.knockback
+                end
+            end
+            
+            return {
+                hit = humanoid,
+                position = hitPos,
+                type = "HUMANOID"
+            }
+        else
+            -- Impact sur objet inanimé
+            return {
+                hit = hit,
+                position = hitPos,
+                type = "OBJECT"
+            }
+        end
+    end
+    
+    return nil  -- Rien n'a été touché
+end
+
+return RaycastHelper</code></div>
+
+                <h3>4. Traçage de Balle (Bullet Hole)</h3>
+
+                <div class="code-block"><code>-- Créer des impacts visuels au point d'impact
+local function createBulletHole(hitPoint, hitNormal, part)
+    -- Créer une décalcomanie (autocollant) pour simuler un trou
+    local decal = Instance.new("Decal")
+    decal.Texture = "rbxasset://textures/face.png"  -- Image du trou de balle
+    decal.Face = Enum.NormalId.Front
+    decal.Parent = part
+    
+    -- Créer une part pour positionner le décal
+    local hole = Instance.new("Part")
+    hole.Shape = Enum.PartType.Cylinder
+    hole.Size = Vector3.new(0.2, 0.1, 0.1)
+    hole.CanCollide = false
+    hole.Position = hitPoint
+    hole.Rotation = hitNormal  -- Orienter selon la normale
+    hole.Parent = workspace
+    
+    -- Supprimer après 10 secondes
+    game:GetService("Debris"):AddItem(hole, 10)
+end
+
+-- Alternative: Utiliser des modèles pré-faits
+local function createExplosionEffect(position)
+    local explosion = Instance.new("Explosion")
+    explosion.Position = position
+    explosion.BlastRadius = 10
+    explosion.BlastPressure = 500000
+    explosion.Parent = workspace
+end</code></div>
+
+                <h3>5. Hit Scan vs Projectile</h3>
+
+                <p>Deux approches différentes:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Approche</th>
+                            <th>Avantages</th>
+                            <th>Inconvénients</th>
+                            <th>Utilisation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Hitscan</strong></td>
+                            <td>Immédiat, précis</td>
+                            <td>Pas de "vol" visible</td>
+                            <td>Fusils, pistolets</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Projectile</strong></td>
+                            <td>Visible, réaliste</td>
+                            <td>Peut être évité, plus lent</td>
+                            <td>Grenades, flèches, magie</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>6. Systèmes Anti-Cheat Basique</h3>
+
+                <div class="code-block"><code>-- Valider les coups côté serveur
+local function validateShot(shooter, targetPlayer, damage)
+    -- Vérifier la distance
+    local maxRange = 1000
+    local distance = (shooter.Character.HumanoidRootPart.Position 
+        - targetPlayer.Character.HumanoidRootPart.Position).Magnitude
+    
+    if distance > maxRange then
+        print("CHEAT: Tir au-delà de la portée!")
+        return false
+    end
+    
+    -- Vérifier si c'est une position valide (raycast visible)
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {workspace}
+    
+    local rayResult = workspace:Raycast(
+        shooter.Character.HumanoidRootPart.Position,
+        (targetPlayer.Character.HumanoidRootPart.Position 
+            - shooter.Character.HumanoidRootPart.Position).Unit * maxRange,
+        raycastParams
+    )
+    
+    if rayResult and rayResult.Instance:IsDescendantOf(targetPlayer.Character) then
+        print("Coup valide!")
+        return true
+    else
+        print("CHEAT: Ligne de vue bloquée!")
+        return false
+    end
+end</code></div>
+
+                <div class="concept-box">
+                    <h4>🎯 Concept Clé: RaycastParams</h4>
+                    <p><strong>FilterType.Whitelist:</strong> Raycast SEULEMENT ces objets
+                    <br><strong>FilterType.Blacklist:</strong> Raycast TOUS SAUF ces objets
+                    <br>Utilisez Blacklist pour les armes, car vous ignorez déjà l'arme elle-même.</p>
+                </div>
+
+                <div class="success">
+                    <strong>✅ Checkpoint:</strong> Vous savez maintenant:
+                    <ul>
+                        <li>Détecter les coups avec Touched et Raycast</li>
+                        <li>Différencier humanoids et objets</li>
+                        <li>Créer des effets d'impact</li>
+                        <li>Valider les coups côté serveur</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECTION DOMMAGES -->
+            <div id="dommages" class="section">
+                <h2>⚔️ Système de Dommages Avancé</h2>
+
+                <p>Au-delà du simple TakeDamage(), voici comment créer un système de dommages sophistiqué.</p>
+
+                <h3>1. Système de Dommages de Base</h3>
+
+                <div class="code-block"><code>-- DamageSystem.lua (ModuleScript)
+local DamageSystem = {}
+
+function DamageSystem.dealDamage(target, damage, attacker, details)
+    details = details or {}
+    
+    -- Vérifier si c'est un humanoid
+    local humanoid = target:FindFirstChild("Humanoid") 
+        or target.Parent:FindFirstChild("Humanoid")
+    
+    if not humanoid then
+        return false
+    end
+    
+    -- Appliquer réductions (armure, buffes, etc.)
+    local finalDamage = damage
+    
+    if details.armorMultiplier then
+        finalDamage = finalDamage * details.armorMultiplier
+    end
+    
+    if details.crit then
+        finalDamage = finalDamage * 2
+        print("COUP CRITIQUE! " .. finalDamage .. " dégâts")
+    end
+    
+    -- Infliger dégâts
+    humanoid:TakeDamage(finalDamage)
+    
+    -- Log
+    local targetName = humanoid.Parent.Name
+    local attackerName = attacker and attacker.Name or "Unknown"
+    print(attackerName .. " a fait " .. finalDamage .. " dégâts à " .. targetName)
+    
+    return true
+end
+
+function DamageSystem.createDamageValue(humanoid, value)
+    -- Créer un objet Value pour tracker les dégâts
+    local damageValue = Instance.new("IntValue")
+    damageValue.Name = "LastDamage"
+    damageValue.Value = value
+    damageValue.Parent = humanoid
+    
+    game:GetService("Debris"):AddItem(damageValue, 2)
+end
+
+return DamageSystem</code></div>
+
+                <h3>2. Knockback et Force Physique</h3>
+
+                <div class="code-block"><code>-- Appliquer une force d'impulsion
+local function applyKnockback(target, direction, force)
+    local hrp = target:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    
+    -- Appliquer une vélocité
+    local knockDir = direction.Unit  -- Normaliser la direction
+    hrp.AssemblyLinearVelocity = knockDir * force
+    
+    -- Alternative: utiliser BodyVelocity pour plus de contrôle
+    local bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.Velocity = knockDir * force
+    bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    bodyVelocity.Parent = hrp
+    
+    game:GetService("Debris"):AddItem(bodyVelocity, 0.2)  -- Supprimer après 0.2s
+end
+
+-- Utilisation
+local shooter = workspace.Player
+local target = workspace.Enemy.Character
+local shooterPos = shooter.HumanoidRootPart.Position
+local targetPos = target.HumanoidRootPart.Position
+
+local direction = (targetPos - shooterPos).Unit
+applyKnockback(target, direction, 100)  -- Force de 100</code></div>
+
+                <h3>3. Armure et Réductions</h3>
+
+                <div class="code-block"><code>-- Système d'armure
+local function calculateArmorReduction(baseDamage, armorValue)
+    -- La formule: 1 point d'armure = 1% de réduction
+    local reductionPercent = math.min(armorValue, 80)  -- Max 80%
+    local reduction = baseDamage * (reductionPercent / 100)
+    local finalDamage = baseDamage - reduction
+    
+    return finalDamage
+end
+
+-- Exemple
+local damage = 100
+local armor = 25
+local finalDamage = calculateArmorReduction(damage, armor)
+print("Dégâts originaux: " .. damage)
+print("Armure: " .. armor)
+print("Dégâts finaux: " .. finalDamage)  -- 75</code></div>
+
+                <h3>4. Types de Dégâts</h3>
+
+                <div class="code-block"><code>-- Créer un système de types de dégâts
+local DamageTypes = {
+    PHYSICAL = {
+        multiplier = 1,
+        armorResistance = 1
+    },
+    FIRE = {
+        multiplier = 1.2,
+        armorResistance = 0.5,
+        canBurn = true
+    },
+    ICE = {
+        multiplier = 0.8,
+        armorResistance = 0.8,
+        canFreeze = true
+    },
+    MAGIC = {
+        multiplier = 1.5,
+        armorResistance = 0,
+        bypassArmor = true
+    }
+}
+
+local function dealDamageWithType(target, baseDamage, damageType)
+    local humanoid = target:FindFirstChild("Humanoid") 
+        or target.Parent:FindFirstChild("Humanoid")
+    
+    if not humanoid then return end
+    
+    local typeData = DamageTypes[damageType] or DamageTypes.PHYSICAL
+    
+    -- Appliquer modificateur de type
+    local damage = baseDamage * typeData.multiplier
+    
+    -- Appliquer résistance armure
+    local armor = target.Parent:FindFirstChild("Armor")
+    if armor and not typeData.bypassArmor then
+        local armorValue = armor.Value or 0
+        damage = damage - (armorValue * typeData.armorResistance)
+    end
+    
+    damage = math.max(damage, 1)  -- Au minimum 1 dégâts
+    
+    humanoid:TakeDamage(damage)
+    print(damageType .. " dégâts: " .. damage)
+end
+
+dealDamageWithType(enemy, 50, "FIRE")
+dealDamageWithType(enemy, 50, "ICE")
+dealDamageWithType(enemy, 50, "MAGIC")</code></div>
+
+                <h3>5. DoT (Damage Over Time)</h3>
+
+                <div class="code-block"><code>-- Dégâts continus (poison, feu, saignement)
+local function applyDoT(target, damagePerSecond, duration, name)
+    local humanoid = target:FindFirstChild("Humanoid") 
+        or target.Parent:FindFirstChild("Humanoid")
+    
+    if not humanoid then return end
+    
+    name = name or "Poison"
+    
+    -- Vérifier si déjà affecté
+    local existing = humanoid:FindFirstChild(name)
+    if existing then
+        existing:Destroy()  -- Réinitialiser
+    end
+    
+    local dotFolder = Instance.new("Folder")
+    dotFolder.Name = name
+    dotFolder.Parent = humanoid
+    
+    local elapsed = 0
+    local tickRate = 0.5  -- Dégâts toutes les 0.5 secondes
+    
+    while elapsed < duration and humanoid.Health > 0 do
+        task.wait(tickRate)
+        elapsed = elapsed + tickRate
+        
+        local damage = damagePerSecond * tickRate
+        humanoid:TakeDamage(damage)
+        
+        print(name .. ": " .. damage .. " dégâts par seconde")
+    end
+    
+    dotFolder:Destroy()
+end
+
+-- Utilisation
+applyDoT(enemy, 5, 10, "Poison")  -- 5 dégâts/sec pendant 10 secondes</code></div>
+
+                <h3>6. Coups Critiques</h3>
+
+                <div class="code-block"><code>-- Système de coups critiques
+local function dealDamageWithCrit(target, baseDamage, critChance, critMultiplier)
+    local humanoid = target:FindFirstChild("Humanoid") 
+        or target.Parent:FindFirstChild("Humanoid")
+    
+    if not humanoid then return end
+    
+    critChance = critChance or 0.2  -- 20% par défaut
+    critMultiplier = critMultiplier or 2  -- 2x par défaut
+    
+    local isCrit = math.random() < critChance
+    local finalDamage = baseDamage
+    
+    if isCrit then
+        finalDamage = baseDamage * critMultiplier
+        print("💥 COUP CRITIQUE! " .. finalDamage .. " dégâts")
+        
+        -- Créer un effet visuel
+        createCriticalEffect(humanoid.Parent)
+    else
+        print("Coup normal: " .. finalDamage .. " dégâts")
+    end
+    
+    humanoid:TakeDamage(finalDamage)
+end
+
+function createCriticalEffect(character)
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    
+    -- Créer une particule ou lumière
+    local light = Instance.new("Light")
+    light.Color = Color3.fromRGB(255, 215, 0)  -- Or
+    light.Brightness = 2
+    light.Parent = hrp
+    
+    game:GetService("Debris"):AddItem(light, 0.3)
+end</code></div>
+
+                <div class="note">
+                    <strong>💡 Conseil:</strong> Toujours valider les dégâts côté serveur! Les clients ne doivent pas pouvoir décider des dégâts eux-mêmes.
+                </div>
+
+                <div class="success">
+                    <strong>✅ Checkpoint:</strong> Vous maîtrisez:
+                    <ul>
+                        <li>Système de dommages modulaire</li>
+                        <li>Knockback et force physique</li>
+                        <li>Types de dégâts et résistances</li>
+                        <li>Dégâts continus (DoT)</li>
+                        <li>Coups critiques</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Reste des sections... -->
+            <div id="projectiles" class="section">
+                <h2>🔶 Projectiles et Rayons</h2>
+                <p><em>Section détaillée à venir...</em></p>
+                <p>Cette section couvrirait: création de projectiles, physique, trajectoire courbe, explosions, trails visuels, etc.</p>
+            </div>
+
+            <div id="animations" class="section">
+                <h2>🎬 Animations et Effets Visuels</h2>
+                <p><em>Section détaillée à venir...</em></p>
+                <p>Animations de tir, recharge, recul, effets de particules, lumières, smoke, etc.</p>
+            </div>
+
+            <div id="sons" class="section">
+                <h2>🔊 Système Audio</h2>
+                <p><em>Section détaillée à venir...</em></p>
+                <p>Sons de tir, rechargement, impacts, sons d'ambiance, volume, distance, etc.</p>
+            </div>
+
+            <div id="cooldown" class="section">
+                <h2>⏱️ Cooldown et Timing</h2>
+                <p><em>Section détaillée à venir...</em></p>
+                <p>Gestion des cooldowns, debounce, fire rate, délais, animations synchronisées.</p>
+            </div>
+
+            <div id="munitions" class="section">
+                <h2>📦 Système de Munitions</h2>
+                <p><em>Section détaillée à venir...</em></p>
+                <p>Gestion des balles, recharge, types de munitions, affichage d'munitions, etc.</p>
+            </div>
+
+            <div id="physique" class="section">
+                <h2>🌍 Physique et Trajectoire</h2>
+                <p><em>Section détaillée à venir...</em></p>
+                <p>Gravité, trajectoire parabolique, vélocité, collisions, rebondissement.</p>
+            </div>
+
+            <div id="multiplayer" class="section">
+                <h2>👥 Système Multiplayer</h2>
+                <p><em>Section détaillée à venir...</em></p>
+                <p>RemoteEvents, synchronisation réseau, hiérarchie Client/Serveur, sécurité.</p>
+            </div>
+
+            <div id="optimisation" class="section">
+                <h2>⚡ Optimisation et Performance</h2>
+                <p><em>Section détaillée à venir...</em></p>
+                <p>Pooling d'objets, déchargement de ressources, LOD, débuggage de performance.</p>
+            </div>
+
+            <div id="exemple-complet" class="section">
+                <h2>💡 Exemple Complet: Fusil de Combat</h2>
+                <p><em>Code complet et fonctionnel d'un fusil...</em></p>
+                <p>Un exemple fonctionnel montrant tout ensemble.</p>
+            </div>
+
+            <div id="exemple-epee" class="section">
+                <h2>⚔️ Exemple: Système d'Épée</h2>
+                <p><em>Code pour une épée de mêlée...</em></p>
+                <p>Combat au mêlée, animations swing, hit detection de mêlée.</p>
+            </div>
+
+            <div id="debug" class="section">
+                <h2>🐛 Déboggage et Tests</h2>
+                <p><em>Section détaillée à venir...</em></p>
+                <p>Outils de déboggage, console, tests unitaires, validation.</p>
+            </div>
+
+            <div id="astuces" class="section">
+                <h2>💎 Astuces Avancées</h2>
+                <p><em>Section détaillée à venir...</em></p>
+                <p>Conseils pros, patterns avancés, optimisations secrètes.</p>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Guide Complet de Développement d'Armes Roblox | Fait avec ❤️ pour les développeurs Roblox</p>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            // Masquer toutes les sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section cliquée
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Mettre à jour le bouton actif
+            const buttons = document.querySelectorAll('.nav-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            
+            // Scroll vers le haut
+            document.querySelector('main').scrollTop = 0;
+        }
+    </script>
+</body>
+</html>
